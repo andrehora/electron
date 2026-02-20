@@ -12,6 +12,7 @@
 
 #include "base/files/file_path.h"
 #include "base/memory/raw_ptr_exclusion.h"
+#include "shell/common/electron_paths.h"
 
 #if BUILDFLAG(IS_LINUX)
 #include <bits/stdint-uintn.h>
@@ -59,7 +60,7 @@ struct DialogSettings {
   std::string message;
   std::string button_label;
   std::string name_field_label;
-  base::FilePath default_path;
+  base::FilePath default_path = electron::GetDefaultPath();
   Filters filters;
   int properties = 0;
   bool shows_tag_field = true;

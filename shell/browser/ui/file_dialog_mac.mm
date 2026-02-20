@@ -21,7 +21,6 @@
 #include "content/public/browser/browser_thread.h"
 #include "electron/mas.h"
 #include "shell/browser/native_window.h"
-#include "shell/common/electron_paths.h"
 #include "shell/common/gin_converters/file_path_converter.h"
 #include "shell/common/gin_helper/dictionary.h"
 #include "shell/common/gin_helper/promise.h"
@@ -187,18 +186,14 @@ void SetupDialog(NSSavePanel* dialog, const DialogSettings& settings) {
 
   [dialog setShowsTagField:settings.shows_tag_field];
 
-  base::FilePath default_path = settings.default_path.empty()
-                                    ? electron::GetDefaultPath()
-                                    : settings.default_path;
-
   NSString* default_dir = nil;
   NSString* default_filename = nil;
-  if (!default_path.empty()) {
+  if (!settings.default_path.empty()) {
     electron::ScopedAllowBlockingForElectron allow_blocking;
-    if (base::DirectoryExists(default_path)) {
-      default_dir = base::SysUTF8ToNSString(default_path.value());
+    if (base::DirectoryExists(settings.default_path)) {
+      default_dir = base::SysUTF8ToNSString(settings.default_path.value());
     } else {
-      if (default_path.IsAbsolute()) {
+      if (settings.default_path.IsAbsolute()) {
         default_dir =
             base::SysUTF8ToNSString(settings.default_path.DirName().value());
       }
